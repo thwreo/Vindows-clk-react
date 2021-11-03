@@ -65,13 +65,13 @@ th {
 td:hover {
   border: 3px solid darkgrey;
 }
-#prevMonth, #nextMonth {
+.prevMonth, .nextMonth {
   color: grey;
 }
-#crtMonth {
+.crtMonth {
   color: white;
 }
-#crtDate {
+.crtDate {
   background-color: #0078d7;
   color: white;
   font-weight: 550;
@@ -79,7 +79,7 @@ td:hover {
   outline: 3px solid black;
   outline-offset: -6px;
 }
-#crtDate:hover {
+.crtDate:hover {
   border: 3px solid lightblue;
 }
 .dateAndArr:hover {
@@ -112,8 +112,8 @@ button {
   width: 20px;
   padding: 0;
 }
-button:active {
-  border-color: #282c34;
+button:focus {
+  outline: none;
 }
 svg#arrows {
   height: 10px;
