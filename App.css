@@ -18,11 +18,12 @@ body {
   padding: none;
 }
 #line {
-  width: 100%;
+  width: 375px;
   height: 0.25px;
   fill: white;
 }
 svg {
+  width: 100%;
   height: 2px;
 }
 #date {
@@ -42,25 +43,35 @@ svg {
 }
 #dateTable, th, td {
   border: 3px solid #282c34;
+  margin: none;
 }
 td {
   width: 45px;
   font-size: 14px;
   text-align: center;
+  vertical-align: middle;
   height: 40px;
-  /* padding-left: 18px; */
   font-family: 'Segoe UI', sans-serif;
+}
+th {
+  text-align: center;
+  color: white;
+  height: 30px;
+  width: 45px;
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: 200;
+  font-size: 14px;
 }
 td:hover {
   border: 3px solid darkgrey;
 }
-#prevMonth, #nextMonth {
+.prevMonth, .nextMonth {
   color: grey;
 }
-#crtMonth {
+.crtMonth {
   color: white;
 }
-#crtDate {
+.crtDate {
   background-color: #0078d7;
   color: white;
   font-weight: 550;
@@ -68,6 +79,42 @@ td:hover {
   outline: 3px solid black;
   outline-offset: -6px;
 }
-#crtDate:hover {
+.crtDate:hover {
   border: 3px solid lightblue;
+}
+.dateAndArr:hover {
+  border: 3px solid #282c34;
+}
+#underDate {
+  color: #bfbfbf;
+  font-family: 'Segoe UI', sans-serif;
+  text-transform: capitalize;
+  font-size: 16px;
+  font-weight: 375;
+  text-align: left;
+  cursor: default;
+  width: fit-content;
+  padding-left: 10px;
+}
+#underDate:hover {
+  color: #f7f7f7;
+}
+.arr:hover polyline {
+  stroke: #f7f7f7;
+}
+.arr:active polyline {
+  stroke: #a3a3a3;
+}
+button {
+  display: inline-block;
+  border: 0;
+  background-color: transparent;
+  width: 20px;
+  padding: 0;
+}
+button:focus {
+  outline: none;
+}
+svg#arrows {
+  height: 10px;
 }
