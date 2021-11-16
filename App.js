@@ -10,14 +10,16 @@ var year = crtYear;
 var month = crtMonth;
 
 function App() {
-  // var calendar = Calendar();
   const [calendar, setCalendar] = useState(Calendar());
   useEffect(() => setCalendar(Calendar()), [month, calendar]);
 
   return (
     <div id="winClk">
-      <WindowsClock /> <WindowsDate /> <Line />
-      <br /> <table id="dateTable">{calendar}</table> <Line />
+      <WindowsClock /> <WindowsDate />
+      <Line />
+      <br />
+      {calendar}
+      <Line />
       {/* tabel componenta - change name - not verb (vb- metode, subst - altele) */}
     </div>
   );
@@ -34,8 +36,13 @@ function WindowsClock() {
     const refresh = setInterval(refreshClock, 100);
     return function cleanup() {
       //TODO: put console.log, investigate how many calls of clearInterval vs setTimeout
+      console.log("*Cleanup done*");
       clearInterval(refresh);
     };
+    // React’s useEffect cleanup function saves applications from unwanted 
+    // behaviors like memory leaks by cleaning up effects. 
+    // In doing so, we can optimize our application’s performance.
+    // https://blog.logrocket.com/understanding-react-useeffect-cleanup-function/
   }, []);
   return (
     <div id="clock">
@@ -65,31 +72,29 @@ function WindowsDate() {
   }, []);
   return (
     <div id="date">
-      {date.toLocaleDateString(lang, options)} 
+      {date.toLocaleDateString(lang, options)}
     </div>
   );
 }
 const ArrowUp = () => (
-  // TODO: remove td container
-  <td class="dateAndArr" > <button class="arr" onClick={changeWithPrevMonth}> <svg id="arrows">
+  // TODO: remove td container - DONE
+  <button class="arr" onClick={changeWithPrevMonth}> <svg id="arrows">
     <polyline fill="#282c34" stroke="#a3a3a3" points="
        0,8 8,0 16,8 " />
   </svg>
   </button>
-  </td >
 )
 const ArrowDown = () => (
-  <td class="dateAndArr"><button class="arr" onClick={changeWithNextMonth}> <svg id="arrows">
+  <button class="arr" onClick={changeWithNextMonth}> <svg id="arrows">
     <polyline fill="#282c34" stroke="#a3a3a3" points="
 0,0 8,8 16,0 " />
   </svg>
   </button>
-  </td>
 )
 
 /**************************OLD CODE**************************** */
 function CalendarArray(y, m) {
-  var monthThatChanges = new Date(y, m);
+  var monthThatChanges = new Date(y, m, 1);
   var firstDayOfMonth = monthThatChanges.getDay() || 7;
   var prevMonth = m;
   (m === 0) ? prevMonth = 11 : prevMonth -= 1;
@@ -99,44 +104,46 @@ function CalendarArray(y, m) {
   var startNr = firstLineStartVal(nrPrevMonth, firstDayOfMonth);
   var nrNextMonth = 42 - nrCrtMonth - firstDayOfMonth + 1;
 
-  var prevDays_aux = Array.from(Array(firstDayOfMonth - 1), (_,day) => {
-    return {day: day + startNr, type: "prevMonth"}});
-  var crtDays_aux = Array.from(Array(nrCrtMonth), (_,day) =>
-    (m === crtMonth && y === crtYear && day === crtDate - 1) ? 
-    {day: day + 1, type: "crtDate"} : {day: day + 1, type: "crtMonth"});
-  var nextDays_aux = Array.from(Array(nrNextMonth), (_,day) => {
-    return {day: day + 1, type: "nextMonth"}});
+  var prevDays_aux = Array.from(Array(firstDayOfMonth - 1), (_, day) => {
+    return { day: day + startNr, type: "prevMonth" }
+  });
+  var crtDays_aux = Array.from(Array(nrCrtMonth), (_, day) =>
+    (m === crtMonth && y === crtYear && day === crtDate - 1) ?
+      { day: day + 1, type: "crtDate" } : { day: day + 1, type: "crtMonth" });
+  var nextDays_aux = Array.from(Array(nrNextMonth), (_, day) => {
+    return { day: day + 1, type: "nextMonth" }
+  });
   var a = prevDays_aux.concat(crtDays_aux.concat(nextDays_aux));
   // console.log(getDaysTable(m, y));
 
   //return 42 day objects
-//   const getDays = () => {
-//     return [
-//       {day: 25, type: "prevMonth"},
-//       {day: 26, type: "prevMonth"}
-//     ];
-//   }
+  //   const getDays = () => {
+  //     return [
+  //       {day: 25, type: "prevMonth"},
+  //       {day: 26, type: "prevMonth"}
+  //     ];
+  //   }
 
-//   // in Calendar component
-//   const calendarDays = getDay();
-//   const getClassForDayType = (dayType) => {}
-//     switch (dayType) {
-//       case "prevMonth":
-//         return "calendar-day prev-month"
-//       default:
-//         return "calendar-day"
-//     }  
-//   const $calendarDaysCells = calendarDays.map(day => {
-//     return `<td class="{$getClassForDay(day.type)}">day.day</td>`
-//   });
-//   return `<table>{$calendarDaysCells}</table>`
+  //   // in Calendar component
+  //   const calendarDays = getDay();
+  //   const getClassForDayType = (dayType) => {}
+  //     switch (dayType) {
+  //       case "prevMonth":
+  //         return "calendar-day prev-month"
+  //       default:
+  //         return "calendar-day"
+  //     }  
+  //   const $calendarDaysCells = calendarDays.map(day => {
+  //     return `<td class="{$getClassForDay(day.type)}">day.day</td>`
+  //   });
+  //   return `<table>{$calendarDaysCells}</table>`
 
-//   // in tests..
-//   // const sampleMonth = import "./sampleMonth.json"
-//   // getDays().assertEquals(sampleMonth)
+  //   // in tests..
+  //   // const sampleMonth = import "./sampleMonth.json"
+  //   // getDays().assertEquals(sampleMonth)
 
-//   // TODO: replace id with class - DONE
-//   // TODO: Remove Array.from(Array()) - can't do that
+  //   // TODO: replace id with class - DONE
+  //   // TODO: Remove Array.from(Array()) - can't do that
 
   var prevMonthArray = Array.from(Array(firstDayOfMonth - 1).keys()).map(i => <td class="prevMonth">{i + startNr}</td>);
   var crtMonthArray = Array.from(Array(nrCrtMonth).keys()).map
@@ -151,11 +158,11 @@ function CalendarArray(y, m) {
   monthThatChanges = monthThatChanges.toLocaleDateString(lang, { year: 'numeric', month: 'long' })
 
   var firstLine = <tr><td class="dateAndArr" colspan="5"><div id="underDate">{monthThatChanges}</div></td><ArrowUp /><ArrowDown /></tr>
- 
+
   var nameOfDays = [];
   var baseDate = new Date('2021-11-01'); // get a Monday
   for (i = 0; i < 7; i++) {
-    nameOfDays.push(baseDate.toLocaleDateString(lang, { weekday: 'short'}));
+    nameOfDays.push(baseDate.toLocaleDateString(lang, { weekday: 'short' }));
     baseDate.setDate(baseDate.getDate() + 1);
   }
   nameOfDays = nameOfDays.map(dayOfWeek => <th>{dayOfWeek[0] + dayOfWeek[1]}</th>);
@@ -171,12 +178,8 @@ function CalendarArray(y, m) {
 }
 /**************************OLD CODE**************************** */
 
-const Calendar = () => (
-  generateTableCalendar()
-)
-
-function generateTableCalendar() {
-  var monthThatChanges = new Date(year, month);
+function Calendar() {
+  var monthThatChanges = new Date(year, month, 1);
   monthThatChanges = monthThatChanges.toLocaleDateString(lang, { year: 'numeric', month: 'long' })
   return (
     getTable(monthThatChanges)
@@ -187,34 +190,35 @@ const firstLineStartVal = (nrDaysPrevMonth, firstDayOfCrtMonth) => (
   nrDaysPrevMonth - firstDayOfCrtMonth + 2
 )
 
-
 // return 42 day objects
 function getDays(m, y) {
   var firstDayOfMonth = (new Date(y, m, 1)).getDay() || 7;
   var prevMonth = m;
   (m === 0) ? prevMonth = 11 : prevMonth -= 1;
   var nrCrtMonth = new Date(y, m + 1, 0).getDate();
-  var nrPrevMonth = new Date(y, prevMonth + 1, 0).getDate();
+  var nrPrevMonth = new Date(y, m, 0).getDate();
 
   var startNr = firstLineStartVal(nrPrevMonth, firstDayOfMonth);
   var nrNextMonth = 42 - nrCrtMonth - firstDayOfMonth + 1;
 
-  var prevDays_aux = Array.from(Array(firstDayOfMonth - 1), (_,day) => {
-    return {day: day + startNr, type: "prevMonth"}});
-  var crtDays_aux = Array.from(Array(nrCrtMonth), (_,day) =>
-    (m === crtMonth && y === crtYear && day === crtDate - 1) ? 
-    {day: day + 1, type: "crtDate"} : {day: day + 1, type: "crtMonth"});
-  var nextDays_aux = Array.from(Array(nrNextMonth), (_,day) => {
-    return {day: day + 1, type: "nextMonth"}});
+  var prevDays_aux = Array.from(Array(firstDayOfMonth - 1), (_, day) => {
+    return { day: day + startNr, type: "prevMonth" }
+  });
+  var crtDays_aux = Array.from(Array(nrCrtMonth), (_, day) =>
+    (m === crtMonth && y === crtYear && day === crtDate - 1) ?
+      { day: day + 1, type: "crtDate" } : { day: day + 1, type: "crtMonth" });
+  var nextDays_aux = Array.from(Array(nrNextMonth), (_, day) => {
+    return { day: day + 1, type: "nextMonth" }
+  });
   var daysOfCalendarSheet = prevDays_aux.concat(crtDays_aux.concat(nextDays_aux));
-  
+
   return daysOfCalendarSheet
 }
 
 function getDaysCells() {
-  const calendarDays = getDays(month ,year);
+  const calendarDays = getDays(month, year);
   const getClassForDayType = (dayType) => {
-    switch(dayType) {
+    switch (dayType) {
       case "prevMonth":
         return "prevMonth"
       case "nextMonth":
@@ -240,7 +244,7 @@ function getNameOfDays() {
   var nameOfDays = [];
   var baseDate = new Date('2021-11-01'); // get a Monday
   for (var i = 0; i < 7; i++) {
-    nameOfDays.push(baseDate.toLocaleDateString(lang, { weekday: 'short'}));
+    nameOfDays.push(baseDate.toLocaleDateString(lang, { weekday: 'short' }));
     baseDate.setDate(baseDate.getDate() + 1);
   }
   nameOfDays = nameOfDays.map(dayOfWeek => <th>{dayOfWeek[0] + dayOfWeek[1]}</th>);
@@ -248,11 +252,12 @@ function getNameOfDays() {
 }
 
 const getFirstLine = (monthAndYear) => (
-  <tr><td class="dateAndArr" colspan="5"><div id="underDate">{monthAndYear}</div></td><ArrowUp /><ArrowDown /></tr>
+  <tr><td class="dateAndArr" colspan="5"><div id="underDate">{monthAndYear}</div></td><td class="dateAndArr"><ArrowUp /></td>
+    <td class="dateAndArr"><ArrowDown /></td></tr>
 )
 
 const getTable = (monthAndYear) => (
-    <table id="dateTable">{Array(getFirstLine(monthAndYear)).concat(getNameOfDays().concat(getDaysCells()))}</table>
+  <table id="dateTable">{Array(getFirstLine(monthAndYear)).concat(getNameOfDays().concat(getDaysCells()))}</table>
 )
 function changeWithPrevMonth() {
   if (month === 0) {
@@ -261,7 +266,6 @@ function changeWithPrevMonth() {
   } else {
     month -= 1;
   }
-  // console.log(month, year)
 }
 function changeWithNextMonth() {
   if (month === 11) {
@@ -270,7 +274,6 @@ function changeWithNextMonth() {
   } else {
     month += 1;
   }
-  // console.log(month, year)
 }
 
 export default App;
